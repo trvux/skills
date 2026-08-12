@@ -5,7 +5,7 @@
     "email": "huynhdong1115@gmail.com",
     "url": "https://github.com/trvux"
   },
-  "description": "A collection of Claude Code plugins: explanation/study-note formats (Cornell notes, Feynman/ELI5, IEEE paper, Socratic dialogue, worked examples, Zettelkasten), a usage-tracking hook, and a design-identity discovery process.",
+  "description": "A collection of explanation and study-note formats for Claude Code (Cornell notes, Feynman/ELI5, IEEE paper, Socratic dialogue, worked examples, Zettelkasten).",
   "plugins": [
     {
       "name": "study-formats",
@@ -20,13 +20,6 @@
       "description": "Shows your Claude session (5h) and weekly usage limit plus a local token/cost estimate after every response.",
       "category": "productivity",
       "tags": ["usage", "quota", "rate-limit", "status", "hook"]
-    },
-    {
-      "name": "design-identity",
-      "source": "./plugins/design-identity",
-      "description": "A consultative discovery process for finding a product's own distinctive design identity, instead of copying the surface look of reference sites like Linear, Framer, or shadcn.",
-      "category": "design",
-      "tags": ["design", "branding", "design-system", "ux", "frontend", "design-brief"]
     }
   ]
 }

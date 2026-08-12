@@ -1,7 +1,7 @@
 # trvux-skills
 
-A Claude Code plugin marketplace with study/explanation-format skills, a
-small usage-tracking hook, and a design-identity discovery process.
+A Claude Code plugin marketplace with study/explanation-format skills, plus a
+small usage-tracking hook.
 
 ## Install
 
@@ -11,10 +11,9 @@ Run this once, inside Claude Code:
 /plugin marketplace add trvux/skills
 /plugin install study-formats@trvux-skills
 /plugin install quota-glance@trvux-skills
-/plugin install design-identity@trvux-skills
 ```
 
-You can install any plugin on its own — they don't depend on each other.
+You can install either plugin on its own — they don't depend on each other.
 
 ## What's included
 
@@ -60,35 +59,13 @@ Weekly  ██░░░░░░░░░░░░░░░░░░ 12% used, r
 Nothing to configure, no sign-in beyond your existing Claude Code login.
 Full details: [`plugins/quota-glance/README.md`](plugins/quota-glance/README.md).
 
-### design-identity
-
-One skill, `design-identity` — a consultative discovery process to run
-*before* building any UI. Instead of copying colors/fonts off a reference
-site (Linear, Framer, shadcn/ui, ...), it interviews you to find your own
-product's point of view, one signature element, and a token system derived
-from that — then writes it all out as a Design Identity Brief file you
-hand to the actual build step.
-
-Say things like:
-
-- "muốn có chất riêng như Linear/Framer, không phải copy y chang"
-- "help me define a design identity for this product before we build it"
-- "bản build đúng token/component rồi mà vẫn không ra chất"
-
-It bundles `scripts/screenshot.sh` — a headless-Chrome screenshot helper
-for actually looking at rendered output during iteration, no browser
-extension required — and `references/case-studies.md`, short breakdowns of
-how Linear/Framer/shadcn/Stripe each arrived at their point of view.
-
 ## Uninstall
 
 ```
 /plugin uninstall study-formats
 /plugin uninstall quota-glance
-/plugin uninstall design-identity
 ```
 
 ## License
 
-MIT — see `plugins/study-formats/LICENSE`, `plugins/quota-glance/LICENSE`,
-and `plugins/design-identity/LICENSE`.
+MIT — see `plugins/study-formats/LICENSE` and `plugins/quota-glance/LICENSE`.
