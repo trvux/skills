@@ -169,26 +169,32 @@ RESET = "\033[0m"
 # empty part of the bar and the trailing "X% used" text are left as plain
 # text so they inherit that default muted look. The filled part of the bar
 # gets an explicit 24-bit color instead, gradient-shaded blue -> orange -> red
-# by how full it is (blue/red anchors taken from Claude Codes own CDS theme,
-# pulled from the CLIs bundled export-theme CSS: blue-300 accent
-# rgb(93,160,242), danger red-300 #ec7e7e; amber sits between as the warning
-# midpoint -- no official CDS token for it).
+# by how full it is. Blue is Claude Codes own accent, #2A78D6; red is the
+# CDS themes danger red-300 #ec7e7e; amber sits between as the warning
+# midpoint (no official CDS token for it).
 #
 # Interpolated in HSL, not raw RGB: a straight RGB lerp between two
 # near-complementary hues (blue, orange) desaturates through a muddy gray
 # at the midpoint. Walking hue directly through cyan/green/yellow instead
 # keeps every step fully saturated -- same idea as a thermometer/heatmap
 # gradient, and it still hits blue at 0%, orange at 50%, red at 100%.
+#
+# The blue->orange half also eases in (seg_t**HUE_EASE): a straight hue
+# sweep there drifted visibly green by ~15% used, which read as "still
+# fine" turning into "caution" way too early. Easing keeps low usage
+# reading unambiguously blue and saves the cyan/green/yellow sweep for
+# the back half of that segment, right before the amber landmark at 50%.
 
-BLUE_H, BLUE_S, BLUE_L = 213.0, 0.85, 0.66
+BLUE_H, BLUE_S, BLUE_L = 212.8, 0.68, 0.50
 ORANGE_H, ORANGE_S, ORANGE_L = 37.7, 0.92, 0.50
 RED_H, RED_S, RED_L = 0.0, 0.74, 0.71
+HUE_EASE = 3
 
 def fill_color(pct):
     t = max(0.0, min(100.0, pct)) / 100
     if t <= 0.5:
         seg_t = t / 0.5
-        h = BLUE_H - 175.3 * seg_t  # short way down: blue -> cyan -> green -> yellow -> orange
+        h = BLUE_H - 175.1 * (seg_t ** HUE_EASE)  # eased: blue -> cyan -> green -> yellow -> orange
         s = BLUE_S + (ORANGE_S - BLUE_S) * seg_t
         l = BLUE_L + (ORANGE_L - BLUE_L) * seg_t
     else:
