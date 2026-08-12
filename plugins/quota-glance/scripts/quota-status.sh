@@ -215,6 +215,11 @@ def reset_in(iso):
     secs = (t - datetime.now(timezone.utc)).total_seconds()
     if secs <= 0:
         return ""
+    if secs < 60:
+        return f"{round(secs)}s"
+    minutes = secs / 60
+    if minutes < 60:
+        return f"{round(minutes)}m"
     hours = secs / 3600
     return f"{hours:.1f}h" if hours < 24 else f"{hours/24:.1f}d"
 
