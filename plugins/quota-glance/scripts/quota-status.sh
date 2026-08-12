@@ -163,13 +163,9 @@ except Exception:
             REMOTE_PART="$(echo "$BODY" | python3 -c '
 import json, sys
 
-BLUE = "\033[38;2;51;102;255m"  # #36F, readable on dark and light terminals alike
-BOLD = "\033[1m"   # filled segment: terminal own fg color (black/white per theme), just bolded
-DIM = "\033[2m"    # empty segment: muted/faded, still theme-aware
+BOLD = "\033[1m"   # important bits: terminal own fg color (black/white per theme), just bolded
+DIM = "\033[2m"    # secondary bits: muted/faded, still theme-aware
 RESET = "\033[0m"
-
-def color(pct):
-    return BLUE
 
 def bar(pct, width=20):
     pct = max(0.0, min(100.0, pct))
@@ -198,8 +194,13 @@ try:
     if fp is None or wp is None:
         sys.exit(1)
     fr, wr = reset_in(five.get("resets_at")), reset_in(week.get("resets_at"))
-    seg1 = f"Session {bar(fp)} {color(fp)}{round(fp)}%{RESET} used" + (f", resets in {fr}" if fr else "")
-    seg2 = f"Weekly  {bar(wp)} {color(wp)}{round(wp)}%{RESET} used" + (f", resets in {wr}" if wr else "")
+
+    def line(label, pct, bar_str, reset_str):
+        tail = f", resets in {reset_str}" if reset_str else ""
+        return f"{DIM}{label}{RESET} {bar_str} {BOLD}{round(pct)}%{RESET}{DIM} used{tail}{RESET}"
+
+    seg1 = line("Session", fp, bar(fp), fr)
+    seg2 = line("Weekly ", wp, bar(wp), wr)
     print(f"{seg1}\n{seg2}")
 except Exception:
     sys.exit(1)
