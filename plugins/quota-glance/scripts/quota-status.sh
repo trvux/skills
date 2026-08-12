@@ -174,38 +174,36 @@ RESET = "\033[0m"
 # #CDE2FB, so the bar reads as one deliberate two-tone element start to
 # end instead of trailing off into invisible empty space.
 #
-# Braille dot patterns (U+2800 range) instead of full block (U+2588):
-# each cell packs several sub-levels of fill (empty -> quarter -> half ->
-# ... -> full dot matrix), so the bar stays smooth across a % change even
-# at less on-screen width than a block-character bar -- reads as "dots
-# filling up" rather than "blocks toggling on".
+# Braille dot patterns (U+2800 range) instead of full block (U+2588): every
+# cell -- filled or track -- is always the same fully-lit dot matrix, only
+# the color changes. An earlier version lit a partial dot count on the one
+# boundary cell for sub-cell precision, but that cell then had visibly
+# fewer dots than its solid neighbors on both sides, reading as a broken
+# gap in the middle of the bar rather than a smooth transition. Whole
+# cells only avoids that; resolution is still fine-grained (an 8px-tall
+# dot matrix within 10-cell width) without the boundary artifact.
 
 BLUE = "\033[38;2;42;120;214m"   # #2A78D6 -- fill, normal usage
 RED = "\033[38;2;195;71;67m"     # #C34743 -- fill, usage at/over limit
 TRACK = "\033[38;2;205;226;251m" # #CDE2FB -- track, unfilled portion
 
-# 5 fill levels per cell (0..4 dots lit), using only the middle two rows of
-# each braille cell (dots 2,3,5,6) -- half the height of a full 4-row/8-dot
-# cell, vertically centered instead of hugging the top, so the bar sits at
-# roughly normal text height and reads as a centered horizontal bar rather
-# than a row of dots floating above the baseline. Index 4 is the fully-lit
-# cell, reused both for "filled" cells (in fg color) and "track" cells (in
-# TRACK color).
-BRAILLE_LEVELS = [0x2800, 0x2802, 0x2806, 0x2816, 0x2836]
+# Fully-lit cell using only the middle two rows of each braille cell (dots
+# 2,3,5,6) -- half the height of a full 4-row/8-dot cell, vertically
+# centered instead of hugging the top, so the bar sits at roughly normal
+# text height and reads as a centered horizontal bar rather than a row of
+# dots floating above the baseline.
+FULL_CELL = 0x2836
 
 def bar(pct, width=10):
     pct = max(0.0, min(100.0, pct))
-    quarters = round(pct / 100 * width * 4)
+    filled = round(pct / 100 * width)
     fg = RED if pct >= 100 else BLUE
+    ch = chr(FULL_CELL)
     runs = []
     run_color = None
     run_chars = []
     for i in range(width):
-        level = max(0, min(4, quarters - i * 4))
-        if level == 0:
-            ch, color = chr(BRAILLE_LEVELS[4]), TRACK
-        else:
-            ch, color = chr(BRAILLE_LEVELS[level]), fg
+        color = fg if i < filled else TRACK
         if color != run_color:
             if run_chars:
                 runs.append(run_color + "".join(run_chars))
