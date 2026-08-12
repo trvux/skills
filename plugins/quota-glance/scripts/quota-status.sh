@@ -100,12 +100,12 @@ except Exception:
 if total_tokens == 0:
     sys.exit(0)
 
-tok_str = f"{total_tokens/1000:.1f}k tok" if total_tokens >= 1000 else f"{total_tokens} tok"
+tok_str = f"{total_tokens/1000:.1f}k tokens" if total_tokens >= 1000 else f"{total_tokens} tokens"
 if priced_any:
-    tag = "+" if unpriced_any else ""
-    print(f"{tok_str} ~${cost:.2f}{tag}")
+    tag = " (est., partial)" if unpriced_any else ""
+    print(f"This session: {tok_str}, ~${cost:.2f}{tag}")
 else:
-    print(tok_str)
+    print(f"This session: {tok_str}")
 ' "$TRANSCRIPT_PATH" 2>/dev/null)"
 fi
 
@@ -163,10 +163,16 @@ except Exception:
             REMOTE_PART="$(echo "$BODY" | python3 -c '
 import json, sys
 
-def bar(pct, width=5):
+BLUE = "\033[38;2;51;102;255m"  # #36F, readable on dark and light terminals alike
+RESET = "\033[0m"
+
+def color(pct):
+    return BLUE
+
+def bar(pct, width=20):
     pct = max(0.0, min(100.0, pct))
     filled = round(pct / 100 * width)
-    return "#" * filled + "-" * (width - filled)
+    return f"{BLUE}{chr(0x2501) * filled}{RESET}{chr(0x2500) * (width - filled)}"
 
 def reset_in(iso):
     if not iso:
@@ -190,9 +196,9 @@ try:
     if fp is None or wp is None:
         sys.exit(1)
     fr, wr = reset_in(five.get("resets_at")), reset_in(week.get("resets_at"))
-    seg1 = f"Session [{bar(fp)}] {round(fp)}%" + (f" ~{fr}" if fr else "")
-    seg2 = f"Weekly [{bar(wp)}] {round(wp)}%" + (f" ~{wr}" if wr else "")
-    print(f"{seg1} | {seg2}")
+    seg1 = f"Session {bar(fp)} {color(fp)}{round(fp)}%{RESET} used" + (f", resets in {fr}" if fr else "")
+    seg2 = f"Weekly  {bar(wp)} {color(wp)}{round(wp)}%{RESET} used" + (f", resets in {wr}" if wr else "")
+    print(f"{seg1}\n{seg2}")
 except Exception:
     sys.exit(1)
 ' 2>/dev/null)"

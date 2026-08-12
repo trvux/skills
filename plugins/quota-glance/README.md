@@ -2,11 +2,20 @@
 
 A tiny Claude Code plugin: after every response, it shows how much of your
 **session (5-hour)** and **weekly** usage limit you've used, plus a rough
-**token/cost estimate** for this session — one ASCII line, no config.
+**token/cost estimate** for this session — no config.
 
 ```
-Session [##---] 42% ~11.1h | Weekly [#----] 18% ~6.5d | 8.4k tok ~$4.24
+This session: 8.4k tokens, ~$4.24
+Session ██████████░░░░░░░░░░ 50% used, resets in 1.5h
+Weekly  ██░░░░░░░░░░░░░░░░░░ 12% used, resets in 5.3d
 ```
+
+- **`This session: 8.4k tokens, ~$4.24`** — rough token count and cost for
+  *this session only*, estimated from the local transcript (see below).
+- **`Session ... 50% used, resets in 1.5h`** — how much of your rolling
+  **5-hour** usage window you've used, and when it resets.
+- **`Weekly ... 12% used, resets in 5.3d`** — same, for the rolling
+  **7-day** window.
 
 ## How it works
 
