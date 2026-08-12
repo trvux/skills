@@ -184,12 +184,14 @@ BLUE = "\033[38;2;42;120;214m"   # #2A78D6 -- fill, normal usage
 RED = "\033[38;2;195;71;67m"     # #C34743 -- fill, usage at/over limit
 TRACK = "\033[38;2;205;226;251m" # #CDE2FB -- track, unfilled portion
 
-# 5 fill levels per cell (0..4 dots lit), using only the top two rows of
-# each braille cell (dots 1,2,4,5) -- half the height of a full 4-row/8-dot
-# cell, so the bar sits at roughly normal text height instead of looming
-# tall over the line. Index 4 is the fully-lit cell, reused both for
-# "filled" cells (in fg color) and "track" cells (in TRACK color).
-BRAILLE_LEVELS = [0x2800, 0x2801, 0x2803, 0x280B, 0x281B]
+# 5 fill levels per cell (0..4 dots lit), using only the middle two rows of
+# each braille cell (dots 2,3,5,6) -- half the height of a full 4-row/8-dot
+# cell, vertically centered instead of hugging the top, so the bar sits at
+# roughly normal text height and reads as a centered horizontal bar rather
+# than a row of dots floating above the baseline. Index 4 is the fully-lit
+# cell, reused both for "filled" cells (in fg color) and "track" cells (in
+# TRACK color).
+BRAILLE_LEVELS = [0x2800, 0x2802, 0x2806, 0x2816, 0x2836]
 
 def bar(pct, width=10):
     pct = max(0.0, min(100.0, pct))
