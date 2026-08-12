@@ -1,0 +1,18 @@
+{
+  "name": "trvux-skills",
+  "owner": {
+    "name": "trvux",
+    "email": "huynhdong1115@gmail.com",
+    "url": "https://github.com/tranvuxdev"
+  },
+  "description": "A collection of explanation and study-note formats for Claude Code (Cornell notes, Feynman/ELI5, IEEE paper, Socratic dialogue, worked examples, Zettelkasten).",
+  "plugins": [
+    {
+      "name": "study-formats",
+      "source": "./plugins/study-formats",
+      "description": "Six explanation formats for studying and teaching: Cornell notes, Feynman/ELI5, IEEE paper format, Socratic dialogue, worked examples, and Zettelkasten notes.",
+      "category": "productivity",
+      "tags": ["study", "notes", "teaching", "explanation", "learning"]
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+\documentclass[10pt,twocolumn]{article}
+\usepackage[letterpaper,margin=0.75in,columnsep=0.25in]{geometry}
+\usepackage{fontspec}
+\setmainfont{DejaVu Serif}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{titlesec}
+\usepackage{authblk}
+\usepackage{enumitem}
+
+% --- IEEE-like section formatting ---
+\titleformat{\section}{\centering\normalfont\small\bfseries}{\Roman{section}.}{0.5em}{\MakeUppercase}
+\titleformat{\subsection}{\normalfont\small\bfseries\itshape}{\Alph{subsection}.}{0.5em}{}
+\titlespacing*{\section}{0pt}{12pt}{6pt}
+\titlespacing*{\subsection}{0pt}{8pt}{4pt}
+
+\renewcommand{\Authfont}{\normalfont\normalsize}
+\renewcommand{\Affilfont}{\normalfont\small\itshape}
+\setlength{\affilsep}{4pt}
+
+% --- Code listing colors ---
+\definecolor{codebg}{RGB}{245,245,245}
+\definecolor{codekw}{RGB}{0,0,150}
+\definecolor{codecomment}{RGB}{100,100,100}
+\definecolor{codestring}{RGB}{160,20,20}
+
+% Example language definition (Go). Replace `keywords` with the
+% appropriate set for your topic's language.
+\lstdefinelanguage{Go}{
+  keywords={package, import, func, type, struct, interface, return, if, else, for, range, var, const, defer, go, chan, select, case, switch, default, nil, true, false, map, break, continue, err, panic, recover},
+  keywordstyle=\color{codekw}\bfseries,
+  ndkeywords={string, int, bool, error, float64, byte, rune},
+  ndkeywordstyle=\color{teal}\bfseries,
+  sensitive=true,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{codecomment}\itshape,
+  stringstyle=\color{codestring},
+  morestring=[b]",
+  morestring=[b]`,
+}
+
+\lstset{
+  language=Go,
+  backgroundcolor=\color{codebg},
+  basicstyle=\fontsize{7}{8}\ttfamily,
+  breaklines=true,
+  frame=single,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  showstringspaces=false,
+  tabsize=2,
+  xleftmargin=1em,
+  captionpos=b,
+  aboveskip=6pt,
+  belowskip=2pt
+}
+
+\pagestyle{plain}
+
+\title{\bfseries PAPER TITLE GOES HERE (any language / Unicode)}
+\author{AUTHOR NAME}
+\affil{AFFILIATION / DATE LINE}
+\date{}
+
+\begin{document}
+\twocolumn[
+  \begin{@twocolumnfalse}
+    \maketitle
+    \begin{abstract}
+    \small
+    \noindent ABSTRACT TEXT in the target language: 150-250 words.
+
+    \vspace{4pt}
+    \noindent\textit{Index Terms}---keyword1, keyword2, keyword3.
+    \end{abstract}
+    \vspace{10pt}
+  \end{@twocolumnfalse}
+]
+
+\section{Introduction}
+Section body text in the target language.
+
+\section{Background}
+
+\subsection{First subsection}
+Body text.
+
+\begin{lstlisting}[caption={Caption text.}]
+// example code — code/comments conventionally stay in English
+// even when the surrounding prose is in another language
+func example() {
+    return
+}
+\end{lstlisting}
+
+\section{Main Content}
+Core content.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Table caption.}
+\label{tab:example}
+\begin{tabular}{p{1.6cm}p{2.3cm}p{2.2cm}}
+\hline
+\textbf{Aspect} & \textbf{A} & \textbf{B} \\
+\hline
+Row & value & value \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Conclusion}
+Closing summary.
+
+\begin{thebibliography}{9}
+\small
+\bibitem{ref1} Author, ``Title,'' Source, Year.
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,22 @@
+{
+  "name": "study-formats",
+  "displayName": "Study Formats",
+  "version": "1.0.0",
+  "description": "Six explanation formats for studying and teaching: Cornell notes, Feynman/ELI5, IEEE paper format, Socratic dialogue, worked examples, and Zettelkasten notes.",
+  "author": {
+    "name": "trvux",
+    "url": "https://github.com/tranvuxdev"
+  },
+  "license": "MIT",
+  "keywords": [
+    "study",
+    "notes",
+    "teaching",
+    "explanation",
+    "learning",
+    "cornell-notes",
+    "feynman",
+    "socratic",
+    "zettelkasten"
+  ]
+}
