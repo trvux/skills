@@ -174,23 +174,41 @@ RESET = "\033[0m"
 # terminal default muted text color, so the bar reads as one
 # deliberate two-tone element even when nearly empty.
 #
-# Full block (U+2588) / light shade (U+2591) instead of the box-drawing
-# line characters (U+2501/U+2500): those only draw a thin stroke through
-# the middle of the cell, block characters fill the full cell height, so
-# the bar reads taller/thicker at a glance.
+# Braille dot patterns (U+2800 range) instead of full block (U+2588):
+# each cell packs 8 sub-levels of fill (empty -> quarter -> half -> ... ->
+# full dot matrix), so the bar stays smooth across a % change even at
+# half the on-screen width of a block-character bar -- reads as "dots
+# filling up" rather than "blocks toggling on".
+#
+# Two colors only, both 24-bit truecolor: blue is Claude Codes accent,
+# #2A78D6, used for the fill at any normal usage level; red is Claude
+# Codes at-limit danger color, #C34743, and only kicks in once usage has
+# actually hit the limit (>=100%) -- no gradient/amber warning step in
+# between, so the color itself stays a trustworthy binary signal rather
+# than something to squint at. Empty dot cells are the blank braille
+# character (no visible ink), so there is no separate track color to set.
 
 BLUE = "\033[38;2;42;120;214m"   # #2A78D6 -- fill, normal usage
 RED = "\033[38;2;195;71;67m"     # #C34743 -- fill, usage at/over limit
-TRACK = "\033[38;2;205;226;251m" # #CDE2FB -- empty track
+
+# 9 fill levels per cell (0..8 dots lit), left-to-right, bottom-to-top --
+# matches how braille dot patterns read as "filling up".
+BRAILLE_LEVELS = [
+    0x2800, 0x2840, 0x28C0, 0x28E0, 0x28F0, 0x28F1, 0x28F3, 0x28F7, 0x28FF,
+]
 
 def fill_color(pct):
     return RED if pct >= 100 else BLUE
 
-def bar(pct, width=20):
+def bar(pct, width=10):
     pct = max(0.0, min(100.0, pct))
-    filled = round(pct / 100 * width)
+    eighths = round(pct / 100 * width * 8)
     fg = fill_color(pct)
-    return f"{fg}{chr(0x2588) * filled}{RESET}{TRACK}{chr(0x2591) * (width - filled)}{RESET}"
+    cells = []
+    for i in range(width):
+        level = max(0, min(8, eighths - i * 8))
+        cells.append(chr(BRAILLE_LEVELS[level]))
+    return f"{fg}{''.join(cells)}{RESET}"
 
 def reset_in(iso):
     if not iso:

@@ -6,8 +6,8 @@ A tiny Claude Code plugin: after every response, it shows how much of your
 
 ```
 This session: 8.4k tokens, ~$4.24
-Session ██████████░░░░░░░░░░ 50% used, resets in 1.5h
-Weekly  ██░░░░░░░░░░░░░░░░░░ 12% used, resets in 5.3d
+Session ⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀ 50% used, resets in 1.5h
+Weekly  ⣿⣀⠀⠀⠀⠀⠀⠀⠀⠀ 12% used, resets in 5.3d
 ```
 
 - **`This session: 8.4k tokens, ~$4.24`** — rough token count and cost for
