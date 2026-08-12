@@ -217,7 +217,8 @@ fi
 # ---- Combine whatever succeeded ----
 
 if [ -n "$REMOTE_PART" ] && [ -n "$LOCAL_PART" ]; then
-  LINE="$REMOTE_PART | $LOCAL_PART"
+  LINE="$LOCAL_PART
+$REMOTE_PART"
 elif [ -n "$REMOTE_PART" ]; then
   LINE="$REMOTE_PART"
 elif [ -n "$LOCAL_PART" ]; then
