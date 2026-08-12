@@ -228,7 +228,7 @@ fi
 
 python3 -c '
 import json, sys
-print(json.dumps({"hookSpecificOutput": {"hookEventName": "Stop", "continue": True, "systemMessage": sys.argv[1]}}))
+print(json.dumps({"continue": True, "systemMessage": sys.argv[1]}))
 ' "$LINE"
 
 exit 0
