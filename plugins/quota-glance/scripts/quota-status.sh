@@ -164,6 +164,8 @@ except Exception:
 import json, sys
 
 BLUE = "\033[38;2;51;102;255m"  # #36F, readable on dark and light terminals alike
+BOLD = "\033[1m"   # filled segment: terminal's own fg color (black/white per theme), just bolded
+DIM = "\033[2m"    # empty segment: muted/faded, still theme-aware
 RESET = "\033[0m"
 
 def color(pct):
@@ -172,7 +174,7 @@ def color(pct):
 def bar(pct, width=20):
     pct = max(0.0, min(100.0, pct))
     filled = round(pct / 100 * width)
-    return f"{BLUE}{chr(0x2501) * filled}{RESET}{chr(0x2500) * (width - filled)}"
+    return f"{BOLD}{chr(0x2501) * filled}{RESET}{DIM}{chr(0x2500) * (width - filled)}{RESET}"
 
 def reset_in(iso):
     if not iso:
