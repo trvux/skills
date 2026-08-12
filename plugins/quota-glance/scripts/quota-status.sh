@@ -163,18 +163,31 @@ except Exception:
             REMOTE_PART="$(echo "$BODY" | python3 -c '
 import json, sys
 
-BOLD = "\033[1m"   # important bits: terminal own fg color (black/white per theme), just bolded
 RESET = "\033[0m"
 # No explicit DIM/\033[2m here: Claude Code already renders systemMessage text
-# muted by default (see the plain, unstyled LOCAL_PART line below) -- adding our
-# own \033[2m...\033[0m on top of that fought the hosts own default styling
-# instead of matching it. Secondary text is left as plain text so it inherits
-# that default muted look; only BOLD is used, for bits that should stand out.
+# muted by default (see the plain, unstyled LOCAL_PART line below) -- the
+# empty part of the bar and the trailing "X% used" text are left as plain
+# text so they inherit that default muted look. The filled part of the bar
+# gets an explicit 24-bit color instead, gradient-shaded green -> orange ->
+# red by how full it is (same idea as Claude Codes own usage indicators).
+
+GREEN = (34, 197, 94)
+ORANGE = (245, 158, 11)
+RED = (239, 68, 68)
+
+def lerp(a, b, t):
+    return round(a + (b - a) * t)
+
+def fill_color(pct):
+    t = max(0.0, min(100.0, pct)) / 100
+    lo, hi, seg_t = (GREEN, ORANGE, t / 0.5) if t <= 0.5 else (ORANGE, RED, (t - 0.5) / 0.5)
+    r, g, b = (lerp(lo[i], hi[i], seg_t) for i in range(3))
+    return f"\033[38;2;{r};{g};{b}m"
 
 def bar(pct, width=20):
     pct = max(0.0, min(100.0, pct))
     filled = round(pct / 100 * width)
-    return f"{BOLD}{chr(0x2501) * filled}{RESET}{chr(0x2500) * (width - filled)}"
+    return f"{fill_color(pct)}{chr(0x2501) * filled}{RESET}{chr(0x2500) * (width - filled)}"
 
 def reset_in(iso):
     if not iso:
@@ -201,7 +214,7 @@ try:
 
     def line(label, pct, bar_str, reset_str):
         tail = f", resets in {reset_str}" if reset_str else ""
-        return f"{label} {bar_str} {BOLD}{round(pct)}%{RESET} used{tail}"
+        return f"{label} {bar_str} {round(pct)}% used{tail}"
 
     seg1 = line("Session", fp, bar(fp), fr)
     seg2 = line("Weekly ", wp, bar(wp), wr)
