@@ -164,7 +164,7 @@ except Exception:
 import json, sys
 
 BLUE = "\033[38;2;51;102;255m"  # #36F, readable on dark and light terminals alike
-BOLD = "\033[1m"   # filled segment: terminal's own fg color (black/white per theme), just bolded
+BOLD = "\033[1m"   # filled segment: terminal own fg color (black/white per theme), just bolded
 DIM = "\033[2m"    # empty segment: muted/faded, still theme-aware
 RESET = "\033[0m"
 
