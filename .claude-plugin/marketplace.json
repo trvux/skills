@@ -3,7 +3,7 @@
   "owner": {
     "name": "trvux",
     "email": "huynhdong1115@gmail.com",
-    "url": "https://github.com/tranvuxdev"
+    "url": "https://github.com/trvux"
   },
   "description": "A collection of explanation and study-note formats for Claude Code (Cornell notes, Feynman/ELI5, IEEE paper, Socratic dialogue, worked examples, Zettelkasten).",
   "plugins": [

@@ -5,7 +5,7 @@ A Claude Code plugin marketplace with study/explanation-format skills.
 ## Install
 
 ```
-/plugin marketplace add tranvuxdev/skills
+/plugin marketplace add trvux/skills
 /plugin install study-formats@trvux-skills
 ```
 
