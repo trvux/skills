@@ -169,8 +169,8 @@ RESET = "\033[0m"
 # empty part of the bar and the trailing "X% used" text are left as plain
 # text so they inherit that default muted look. The filled part of the bar
 # gets an explicit 24-bit color instead, gradient-shaded blue -> orange -> red
-# by how full it is. Blue is Claude Codes own accent, #2A78D6; red is the
-# CDS themes danger red-300 #ec7e7e; amber sits between as the warning
+# by how full it is. Blue is Claude Codes accent, #2A78D6; red is Claude
+# Codes at-limit danger color, #C34743; amber sits between as the warning
 # midpoint (no official CDS token for it).
 #
 # Interpolated in HSL, not raw RGB: a straight RGB lerp between two
@@ -187,7 +187,7 @@ RESET = "\033[0m"
 
 BLUE_H, BLUE_S, BLUE_L = 212.8, 0.68, 0.50
 ORANGE_H, ORANGE_S, ORANGE_L = 37.7, 0.92, 0.50
-RED_H, RED_S, RED_L = 0.0, 0.74, 0.71
+RED_H, RED_S, RED_L = 1.9, 0.52, 0.51
 HUE_EASE = 3
 
 def fill_color(pct):
@@ -199,7 +199,7 @@ def fill_color(pct):
         l = BLUE_L + (ORANGE_L - BLUE_L) * seg_t
     else:
         seg_t = (t - 0.5) / 0.5
-        h = ORANGE_H - 37.7 * seg_t  # orange -> red
+        h = ORANGE_H - (ORANGE_H - RED_H) * seg_t  # orange -> red
         s = ORANGE_S + (RED_S - ORANGE_S) * seg_t
         l = ORANGE_L + (RED_L - ORANGE_L) * seg_t
     r, g, b = colorsys.hls_to_rgb((h % 360) / 360, l, s)
