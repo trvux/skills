@@ -1,7 +1,7 @@
 {
   "name": "study-formats",
   "displayName": "Study Formats",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Six explanation formats for studying and teaching: Cornell notes, Feynman/ELI5, IEEE paper format, Socratic dialogue, worked examples, and Zettelkasten notes.",
   "author": {
     "name": "trvux",
