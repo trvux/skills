@@ -7,11 +7,14 @@ A Claude Code plugin marketplace with study/explanation-format skills.
 ```
 /plugin marketplace add trvux/skills
 /plugin install study-formats@trvux-skills
+/plugin install quota-glance@trvux-skills
 ```
 
 ## What's included
 
-The `study-formats` plugin bundles six skills that reformat any explanation:
+### study-formats
+
+Bundles six skills that reformat any explanation:
 
 - **cornell-notes** — cue/notes columns + self-test recall questions
 - **feynman-eli5** — layered plain-language explanation (ELI5 → precision → why it matters)
@@ -20,6 +23,10 @@ The `study-formats` plugin bundles six skills that reformat any explanation:
 - **worked-example** — one continuous case-study walkthrough
 - **zettelkasten-notes** — atomic, cross-linked notes with a link map
 
+### quota-glance
+
+Shows your Claude session (5h) and weekly usage limit, plus a local token/cost estimate, after every response.
+
 ## License
 
-MIT — see `plugins/study-formats/LICENSE`.
+MIT — see `plugins/study-formats/LICENSE` and `plugins/quota-glance/LICENSE`.
