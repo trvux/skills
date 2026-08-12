@@ -164,13 +164,17 @@ except Exception:
 import json, sys
 
 BOLD = "\033[1m"   # important bits: terminal own fg color (black/white per theme), just bolded
-DIM = "\033[2m"    # secondary bits: muted/faded, still theme-aware
 RESET = "\033[0m"
+# No explicit DIM/\033[2m here: Claude Code already renders systemMessage text
+# muted by default (see the plain, unstyled LOCAL_PART line below) -- adding our
+# own \033[2m...\033[0m on top of that fought the hosts own default styling
+# instead of matching it. Secondary text is left as plain text so it inherits
+# that default muted look; only BOLD is used, for bits that should stand out.
 
 def bar(pct, width=20):
     pct = max(0.0, min(100.0, pct))
     filled = round(pct / 100 * width)
-    return f"{BOLD}{chr(0x2501) * filled}{RESET}{DIM}{chr(0x2500) * (width - filled)}{RESET}"
+    return f"{BOLD}{chr(0x2501) * filled}{RESET}{chr(0x2500) * (width - filled)}"
 
 def reset_in(iso):
     if not iso:
@@ -197,7 +201,7 @@ try:
 
     def line(label, pct, bar_str, reset_str):
         tail = f", resets in {reset_str}" if reset_str else ""
-        return f"{DIM}{label}{RESET} {bar_str} {BOLD}{round(pct)}%{RESET}{DIM} used{tail}{RESET}"
+        return f"{label} {bar_str} {BOLD}{round(pct)}%{RESET} used{tail}"
 
     seg1 = line("Session", fp, bar(fp), fr)
     seg2 = line("Weekly ", wp, bar(wp), wr)
