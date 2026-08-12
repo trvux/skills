@@ -208,7 +208,8 @@ def bar(pct, width=10):
     for i in range(width):
         level = max(0, min(8, eighths - i * 8))
         cells.append(chr(BRAILLE_LEVELS[level]))
-    return f"{fg}{''.join(cells)}{RESET}"
+    joined = "".join(cells)
+    return f"{fg}{joined}{RESET}"
 
 def reset_in(iso):
     if not iso:
