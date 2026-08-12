@@ -6,9 +6,15 @@ A tiny Claude Code plugin: after every response, it shows how much of your
 
 ```
 This session: 8.4k tokens, ~$4.24
-Session ⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀ 50% used, resets in 1.5h
-Weekly  ⣿⣀⠀⠀⠀⠀⠀⠀⠀⠀ 12% used, resets in 5.3d
+Session ⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶ 50% used, resets in 1.5h
+Weekly  ⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶ 12% used, resets in 5.3d
 ```
+
+(the bar is 10 fully-lit braille cells; only the color changes at the
+usage boundary — filled cells blue, `#2A78D6`, unfilled cells pale blue,
+`#CDE2FB`, both switching to red, `#C34743`, once a limit is fully used —
+so it renders as one solid two-tone bar in a terminal, even though it's
+the same dot glyph the whole way across in plain text like this.)
 
 - **`This session: 8.4k tokens, ~$4.24`** — rough token count and cost for
   *this session only*, estimated from the local transcript (see below).
