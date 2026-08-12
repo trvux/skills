@@ -13,6 +13,13 @@
       "description": "Six explanation formats for studying and teaching: Cornell notes, Feynman/ELI5, IEEE paper format, Socratic dialogue, worked examples, and Zettelkasten notes.",
       "category": "productivity",
       "tags": ["study", "notes", "teaching", "explanation", "learning"]
+    },
+    {
+      "name": "quota-glance",
+      "source": "./plugins/quota-glance",
+      "description": "Shows your Claude session (5h) and weekly usage limit plus a local token/cost estimate after every response.",
+      "category": "productivity",
+      "tags": ["usage", "quota", "rate-limit", "status", "hook"]
     }
   ]
 }

@@ -1,0 +1,19 @@
+{
+  "name": "quota-glance",
+  "displayName": "Quota Glance",
+  "version": "1.0.0",
+  "description": "Shows your Claude session (5h) and weekly usage limit plus a local token/cost estimate after every response.",
+  "author": {
+    "name": "trvux",
+    "url": "https://github.com/trvux"
+  },
+  "license": "MIT",
+  "keywords": [
+    "usage",
+    "quota",
+    "rate-limit",
+    "status",
+    "hook",
+    "productivity"
+  ]
+}

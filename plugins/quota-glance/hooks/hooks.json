@@ -1,0 +1,18 @@
+{
+  "description": "After each response, shows session (5h) and weekly quota usage as a progress bar.",
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/quota-status.sh",
+            "args": [],
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
