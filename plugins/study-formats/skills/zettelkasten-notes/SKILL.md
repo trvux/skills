@@ -44,6 +44,8 @@ Each note:
 
 [2-5 sentences OR one focused code block. One idea only.]
 
+[optional: one small Mermaid diagram — see "Per-note diagrams" below]
+
 → Liên quan: `PREFIX-XXX` (why it's related, in a few words), `PREFIX-YYY` (...)
 ```
 
@@ -52,6 +54,24 @@ Vietnamese; translate it — and every other label in the note — into
 whatever language the user is actually writing in, per the Language
 section above. Keep the `🔖` marker and `PREFIX-NNN` ID format regardless
 of language.)
+
+### Per-note diagrams (optional)
+
+A note may include its own small ` ```mermaid ` diagram, in addition to
+its prose, when the idea is inherently a shape — a decision/branch, a
+blocking or sequencing behavior, a state transition, a small pipeline —
+and the diagram would let the reader see that shape faster than the
+sentence would. Good candidates: "which of these two do I pick and
+why" (`flowchart TD` with a decision node), "what blocks on what and in
+which order" (`sequenceDiagram`), "what state can this be in and what
+moves it to the next one" (`stateDiagram-v2`).
+
+Don't add one to every note by default — most atomic notes are well
+served by prose or a code listing alone. Add a per-note diagram only
+where it earns its place: if the diagram would just be a picture of the
+title, skip it. Keep it small (3-6 nodes) — a per-note diagram that
+needs the same scale as the closing link map belongs in that link map
+instead, not repeated here.
 
 Rules for individual notes:
 - **One idea per note.** If explaining the note requires a "and also..."
