@@ -71,17 +71,39 @@ Rules for individual notes:
 
 ## Required closing section: link map
 
-After all individual notes, include an ASCII or simple text diagram
-showing the overall connection structure — not just a repeat of each
-note's own links, but a bird's-eye view of clusters and the main paths
-through the material:
+After all individual notes, include a **Mermaid flowchart** in a
+` ```mermaid ` fenced block showing the overall connection structure —
+not just a repeat of each note's own links, but a bird's-eye view of
+clusters and the main paths through the material. GitHub, Obsidian, VS
+Code (with the Markdown Preview Mermaid extension), and Claude Artifacts
+all render Mermaid natively straight out of the `.md` file, so this is
+an actual rendered graph for the reader, not text pretending to be one.
 
+Build one node per note (`PREFIX-NNN["PREFIX-NNN<br/>Short title"]`) and
+one edge per link declared in that note's own "→ Liên quan" /
+"→ Related" line — the graph should be a direct, mechanical rendering
+of the links you already wrote, not a separately-invented summary:
+
+```mermaid
+flowchart LR
+    DI001["DI-001<br/>Problem"]
+    DI002["DI-002<br/>Solution"]
+    DI003["DI-003<br/>Mechanism"]
+
+    DI001 --> DI002
+    DI002 --> DI003
 ```
-DI-001 (problem) ──→ DI-002 (solution) ──→ DI-003 (mechanism)
-     │                     │                      │
-     ↓                     ↓                      ↓
-  ...                   ...                    ...
-```
+
+Use `flowchart LR` for topics that read left-to-right (a rough
+progression exists) and `flowchart TD` when the structure is more
+clustered/hub-like than linear. Keep node labels to the ID plus a 1-4
+word title — full explanations belong in the notes themselves, not the
+graph.
+
+If a renderer without Mermaid support is a real possibility for this
+user (e.g. a plain-text-only terminal), you may add a short ASCII
+fallback diagram after the Mermaid block, but the Mermaid block is the
+primary, required deliverable — don't substitute ASCII for it.
 
 End with an explicit instruction for how to use the notes actively: pick
 a note at random, try to recall its content before opening it, and only
@@ -89,15 +111,6 @@ follow a link when genuinely stuck — not "read top to bottom a second
 time." This instruction is part of the deliverable, not optional
 boilerplate — it's what makes the format function as retrieval practice
 rather than just a differently-formatted document.
-
-## When generating for a CLI/terminal context
-
-If this skill is invoked via CLI where the eventual consumption is an
-interactive tool (not raw markdown), mention to the user that the note
-set can also be rendered as an actual clickable graph (e.g. via a small
-HTML/JS artifact or a note-taking tool import) — but always produce the
-complete markdown note set as the primary deliverable regardless, since
-that's portable to any tool.
 
 ## What NOT to do
 
