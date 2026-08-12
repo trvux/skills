@@ -164,52 +164,55 @@ except Exception:
 import json, sys
 
 RESET = "\033[0m"
-# Two colors only, both 24-bit truecolor: blue is Claude Codes accent,
-# #2A78D6, used for the filled portion at any normal usage level; red is
-# Claude Codes at-limit danger color, #C34743, and only kicks in once
-# usage has actually hit the limit (>=100%) -- no gradient/amber warning
-# step in between, so the color itself stays a trustworthy binary signal
-# rather than something to squint at. The empty/track portion gets its
-# own fixed tint, #CDE2FB (a pale blue), instead of inheriting the
-# terminal default muted text color, so the bar reads as one
-# deliberate two-tone element even when nearly empty.
-#
-# Braille dot patterns (U+2800 range) instead of full block (U+2588):
-# each cell packs 8 sub-levels of fill (empty -> quarter -> half -> ... ->
-# full dot matrix), so the bar stays smooth across a % change even at
-# half the on-screen width of a block-character bar -- reads as "dots
-# filling up" rather than "blocks toggling on".
-#
-# Two colors only, both 24-bit truecolor: blue is Claude Codes accent,
-# #2A78D6, used for the fill at any normal usage level; red is Claude
+# Two colors, both 24-bit truecolor: blue is Claude Codes accent, #2A78D6,
+# used for the filled portion at any normal usage level; red is Claude
 # Codes at-limit danger color, #C34743, and only kicks in once usage has
 # actually hit the limit (>=100%) -- no gradient/amber warning step in
 # between, so the color itself stays a trustworthy binary signal rather
-# than something to squint at. Empty dot cells are the blank braille
-# character (no visible ink), so there is no separate track color to set.
+# than something to squint at. The unfilled/track portion is drawn with
+# full dot cells too (not blank braille), tinted a fixed pale blue,
+# #CDE2FB, so the bar reads as one deliberate two-tone element start to
+# end instead of trailing off into invisible empty space.
+#
+# Braille dot patterns (U+2800 range) instead of full block (U+2588):
+# each cell packs several sub-levels of fill (empty -> quarter -> half ->
+# ... -> full dot matrix), so the bar stays smooth across a % change even
+# at less on-screen width than a block-character bar -- reads as "dots
+# filling up" rather than "blocks toggling on".
 
 BLUE = "\033[38;2;42;120;214m"   # #2A78D6 -- fill, normal usage
 RED = "\033[38;2;195;71;67m"     # #C34743 -- fill, usage at/over limit
+TRACK = "\033[38;2;205;226;251m" # #CDE2FB -- track, unfilled portion
 
 # 5 fill levels per cell (0..4 dots lit), using only the top two rows of
 # each braille cell (dots 1,2,4,5) -- half the height of a full 4-row/8-dot
 # cell, so the bar sits at roughly normal text height instead of looming
-# tall over the line.
+# tall over the line. Index 4 is the fully-lit cell, reused both for
+# "filled" cells (in fg color) and "track" cells (in TRACK color).
 BRAILLE_LEVELS = [0x2800, 0x2801, 0x2803, 0x280B, 0x281B]
-
-def fill_color(pct):
-    return RED if pct >= 100 else BLUE
 
 def bar(pct, width=10):
     pct = max(0.0, min(100.0, pct))
     quarters = round(pct / 100 * width * 4)
-    fg = fill_color(pct)
-    cells = []
+    fg = RED if pct >= 100 else BLUE
+    runs = []
+    run_color = None
+    run_chars = []
     for i in range(width):
         level = max(0, min(4, quarters - i * 4))
-        cells.append(chr(BRAILLE_LEVELS[level]))
-    joined = "".join(cells)
-    return f"{fg}{joined}{RESET}"
+        if level == 0:
+            ch, color = chr(BRAILLE_LEVELS[4]), TRACK
+        else:
+            ch, color = chr(BRAILLE_LEVELS[level]), fg
+        if color != run_color:
+            if run_chars:
+                runs.append(run_color + "".join(run_chars))
+            run_color, run_chars = color, [ch]
+        else:
+            run_chars.append(ch)
+    if run_chars:
+        runs.append(run_color + "".join(run_chars))
+    return "".join(runs) + RESET
 
 def reset_in(iso):
     if not iso:
