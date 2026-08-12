@@ -191,22 +191,22 @@ RESET = "\033[0m"
 BLUE = "\033[38;2;42;120;214m"   # #2A78D6 -- fill, normal usage
 RED = "\033[38;2;195;71;67m"     # #C34743 -- fill, usage at/over limit
 
-# 9 fill levels per cell (0..8 dots lit), left-to-right, bottom-to-top --
-# matches how braille dot patterns read as "filling up".
-BRAILLE_LEVELS = [
-    0x2800, 0x2840, 0x28C0, 0x28E0, 0x28F0, 0x28F1, 0x28F3, 0x28F7, 0x28FF,
-]
+# 5 fill levels per cell (0..4 dots lit), using only the top two rows of
+# each braille cell (dots 1,2,4,5) -- half the height of a full 4-row/8-dot
+# cell, so the bar sits at roughly normal text height instead of looming
+# tall over the line.
+BRAILLE_LEVELS = [0x2800, 0x2801, 0x2803, 0x280B, 0x281B]
 
 def fill_color(pct):
     return RED if pct >= 100 else BLUE
 
 def bar(pct, width=10):
     pct = max(0.0, min(100.0, pct))
-    eighths = round(pct / 100 * width * 8)
+    quarters = round(pct / 100 * width * 4)
     fg = fill_color(pct)
     cells = []
     for i in range(width):
-        level = max(0, min(8, eighths - i * 8))
+        level = max(0, min(4, quarters - i * 4))
         cells.append(chr(BRAILLE_LEVELS[level]))
     joined = "".join(cells)
     return f"{fg}{joined}{RESET}"
