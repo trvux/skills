@@ -161,28 +161,43 @@ except Exception:
 
           if [ "$HTTP_CODE" = "200" ]; then
             REMOTE_PART="$(echo "$BODY" | python3 -c '
-import json, sys
+import json, sys, colorsys
 
 RESET = "\033[0m"
 # No explicit DIM/\033[2m here: Claude Code already renders systemMessage text
 # muted by default (see the plain, unstyled LOCAL_PART line below) -- the
 # empty part of the bar and the trailing "X% used" text are left as plain
 # text so they inherit that default muted look. The filled part of the bar
-# gets an explicit 24-bit color instead, gradient-shaded green -> orange ->
-# red by how full it is (same idea as Claude Codes own usage indicators).
+# gets an explicit 24-bit color instead, gradient-shaded blue -> orange -> red
+# by how full it is (blue/red anchors taken from Claude Codes own CDS theme,
+# pulled from the CLIs bundled export-theme CSS: blue-300 accent
+# rgb(93,160,242), danger red-300 #ec7e7e; amber sits between as the warning
+# midpoint -- no official CDS token for it).
+#
+# Interpolated in HSL, not raw RGB: a straight RGB lerp between two
+# near-complementary hues (blue, orange) desaturates through a muddy gray
+# at the midpoint. Walking hue directly through cyan/green/yellow instead
+# keeps every step fully saturated -- same idea as a thermometer/heatmap
+# gradient, and it still hits blue at 0%, orange at 50%, red at 100%.
 
-GREEN = (34, 197, 94)
-ORANGE = (245, 158, 11)
-RED = (239, 68, 68)
-
-def lerp(a, b, t):
-    return round(a + (b - a) * t)
+BLUE_H, BLUE_S, BLUE_L = 213.0, 0.85, 0.66
+ORANGE_H, ORANGE_S, ORANGE_L = 37.7, 0.92, 0.50
+RED_H, RED_S, RED_L = 0.0, 0.74, 0.71
 
 def fill_color(pct):
     t = max(0.0, min(100.0, pct)) / 100
-    lo, hi, seg_t = (GREEN, ORANGE, t / 0.5) if t <= 0.5 else (ORANGE, RED, (t - 0.5) / 0.5)
-    r, g, b = (lerp(lo[i], hi[i], seg_t) for i in range(3))
-    return f"\033[38;2;{r};{g};{b}m"
+    if t <= 0.5:
+        seg_t = t / 0.5
+        h = BLUE_H - 175.3 * seg_t  # short way down: blue -> cyan -> green -> yellow -> orange
+        s = BLUE_S + (ORANGE_S - BLUE_S) * seg_t
+        l = BLUE_L + (ORANGE_L - BLUE_L) * seg_t
+    else:
+        seg_t = (t - 0.5) / 0.5
+        h = ORANGE_H - 37.7 * seg_t  # orange -> red
+        s = ORANGE_S + (RED_S - ORANGE_S) * seg_t
+        l = ORANGE_L + (RED_L - ORANGE_L) * seg_t
+    r, g, b = colorsys.hls_to_rgb((h % 360) / 360, l, s)
+    return f"\033[38;2;{round(r*255)};{round(g*255)};{round(b*255)}m"
 
 def bar(pct, width=20):
     pct = max(0.0, min(100.0, pct))
