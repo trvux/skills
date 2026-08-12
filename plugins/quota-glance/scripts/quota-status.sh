@@ -161,54 +161,36 @@ except Exception:
 
           if [ "$HTTP_CODE" = "200" ]; then
             REMOTE_PART="$(echo "$BODY" | python3 -c '
-import json, sys, colorsys
+import json, sys
 
 RESET = "\033[0m"
-# No explicit DIM/\033[2m here: Claude Code already renders systemMessage text
-# muted by default (see the plain, unstyled LOCAL_PART line below) -- the
-# empty part of the bar and the trailing "X% used" text are left as plain
-# text so they inherit that default muted look. The filled part of the bar
-# gets an explicit 24-bit color instead, gradient-shaded blue -> orange -> red
-# by how full it is. Blue is Claude Codes accent, #2A78D6; red is Claude
-# Codes at-limit danger color, #C34743; amber sits between as the warning
-# midpoint (no official CDS token for it).
+# Two colors only, both 24-bit truecolor: blue is Claude Codes accent,
+# #2A78D6, used for the filled portion at any normal usage level; red is
+# Claude Codes at-limit danger color, #C34743, and only kicks in once
+# usage has actually hit the limit (>=100%) -- no gradient/amber warning
+# step in between, so the color itself stays a trustworthy binary signal
+# rather than something to squint at. The empty/track portion gets its
+# own fixed tint, #CDE2FB (a pale blue), instead of inheriting the
+# terminal default muted text color, so the bar reads as one
+# deliberate two-tone element even when nearly empty.
 #
-# Interpolated in HSL, not raw RGB: a straight RGB lerp between two
-# near-complementary hues (blue, orange) desaturates through a muddy gray
-# at the midpoint. Walking hue directly through cyan/green/yellow instead
-# keeps every step fully saturated -- same idea as a thermometer/heatmap
-# gradient, and it still hits blue at 0%, orange at 50%, red at 100%.
-#
-# The blue->orange half also eases in (seg_t**HUE_EASE): a straight hue
-# sweep there drifted visibly green by ~15% used, which read as "still
-# fine" turning into "caution" way too early. Easing keeps low usage
-# reading unambiguously blue and saves the cyan/green/yellow sweep for
-# the back half of that segment, right before the amber landmark at 50%.
+# Full block (U+2588) / light shade (U+2591) instead of the box-drawing
+# line characters (U+2501/U+2500): those only draw a thin stroke through
+# the middle of the cell, block characters fill the full cell height, so
+# the bar reads taller/thicker at a glance.
 
-BLUE_H, BLUE_S, BLUE_L = 212.8, 0.68, 0.50
-ORANGE_H, ORANGE_S, ORANGE_L = 37.7, 0.92, 0.50
-RED_H, RED_S, RED_L = 1.9, 0.52, 0.51
-HUE_EASE = 3
+BLUE = "\033[38;2;42;120;214m"   # #2A78D6 -- fill, normal usage
+RED = "\033[38;2;195;71;67m"     # #C34743 -- fill, usage at/over limit
+TRACK = "\033[38;2;205;226;251m" # #CDE2FB -- empty track
 
 def fill_color(pct):
-    t = max(0.0, min(100.0, pct)) / 100
-    if t <= 0.5:
-        seg_t = t / 0.5
-        h = BLUE_H - 175.1 * (seg_t ** HUE_EASE)  # eased: blue -> cyan -> green -> yellow -> orange
-        s = BLUE_S + (ORANGE_S - BLUE_S) * seg_t
-        l = BLUE_L + (ORANGE_L - BLUE_L) * seg_t
-    else:
-        seg_t = (t - 0.5) / 0.5
-        h = ORANGE_H - (ORANGE_H - RED_H) * seg_t  # orange -> red
-        s = ORANGE_S + (RED_S - ORANGE_S) * seg_t
-        l = ORANGE_L + (RED_L - ORANGE_L) * seg_t
-    r, g, b = colorsys.hls_to_rgb((h % 360) / 360, l, s)
-    return f"\033[38;2;{round(r*255)};{round(g*255)};{round(b*255)}m"
+    return RED if pct >= 100 else BLUE
 
 def bar(pct, width=20):
     pct = max(0.0, min(100.0, pct))
     filled = round(pct / 100 * width)
-    return f"{fill_color(pct)}{chr(0x2501) * filled}{RESET}{chr(0x2500) * (width - filled)}"
+    fg = fill_color(pct)
+    return f"{fg}{chr(0x2588) * filled}{RESET}{TRACK}{chr(0x2591) * (width - filled)}{RESET}"
 
 def reset_in(iso):
     if not iso:
